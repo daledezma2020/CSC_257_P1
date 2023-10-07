@@ -52,16 +52,34 @@ int main(int argc, char *argv[]) {
     zeroOut(client_name,10);
     zeroOut(server_name,10);
 
-    int i = nameExchange(client_name, server_name,socket_desc); //Exchange names
+    nameExchange(client_name, server_name,socket_desc); //Exchange names
 
     printf("Server's name is: %s\n",server_name);
 
-    char client_move, server_move;
+    // char client_move[2], server_move[1];
 
-    //zeroOut(client_move,10);
-    //zeroOut(server_move,10);
+    char server_move[2];
+    char client_move[2];
 
-    moveExchange(&client_move,&server_move,socket_desc);
+    zeroOut(client_move,2);
+    zeroOut(server_move,2);
+
+    client_move[0] = 'r';
+
+    // moveExchange(client_move,server_move,socket_desc);
+
+    if (send(socket_desc, &client_move, 1, 0) < 0) { 
+        printf("Unable to send message\n");
+        return -1;
+    }
+
+    if (recv(socket_desc, &server_move, 1, 0) < 0) { // Receive data into server_move
+        printf("Error while receiving server's move\n");
+        return -1;
+    } 
+
+    printf("client move sent: %c\n", client_move[0]); // Use %c to print a single character
+    printf("server move received: %c\n",server_move[0]);
 
     //printf("client move: %s\nServer move: %s\n",client_move,server_move);
 
@@ -82,40 +100,40 @@ int main(int argc, char *argv[]) {
     }
     
     //printf("client move: %s\nServer move: %s\n",client_move,server_move);
-    printf("%s's move is: %c\n",server_name,server_move);
+    printf("%s's move is: %c\n",server_name,server_move[0]);
     //
     //WINNING POSSIBILITIES
     //
-    if (server_move == 'r') { // If server chose 'rock'
-        if (client_move == 'r') { // If the client (you) chose 'rock'
+    if (server_move[0] == 'r') { // If server chose 'rock'
+        if (client_move[0] == 'r') { // If the client (you) chose 'rock'
             printf("you tied bozo\n");
         }
-        else if (client_move == 's') { // If the client (you) chose 'scissors'
+        else if (client_move[0] == 's') { // If the client (you) chose 'scissors'
             printf("hey guy, you lost\n");
         }
-        else if (client_move == 'p') { // If the client (you) chose 'paper'
+        else if (client_move[0] == 'p') { // If the client (you) chose 'paper'
             printf("you win\n");
         }
     }
-    else if (server_move == 'p') { // If server chose 'paper'
-        if (client_move == 'p') { // If the client (you) chose 'paper'
+    else if (server_move[0] == 'p') { // If server chose 'paper'
+        if (client_move[0] == 'p') { // If the client (you) chose 'paper'
             printf("you tied bozo\n");
         }
-        else if (client_move == 'r') { // If the client (you) chose 'rock'
+        else if (client_move[0] == 'r') { // If the client (you) chose 'rock'
             printf("hey guy, you lost\n");
         }
-        else if (client_move == 's') { // If the client (you) chose 'scissors'
+        else if (client_move[0] == 's') { // If the client (you) chose 'scissors'
             printf("you win\n");
         }
     }
-    else if (server_move == 's') { // If server chose 'scissors'
-        if (client_move == 's') { // If the client (you) chose 'scissors'
+    else if (server_move[0] == 's') { // If server chose 'scissors'
+        if (client_move[0] == 's') { // If the client (you) chose 'scissors'
             printf("you tied bozo\n");
         }
-        else if (client_move == 'p') { // If the client (you) chose 'paper'
+        else if (client_move[0] == 'p') { // If the client (you) chose 'paper'
             printf("hey guy, you lost\n");
         }
-        else if (client_move == 'r') { // If the client (you) chose 'rock'
+        else if (client_move[0] == 'r') { // If the client (you) chose 'rock'
             printf("you win\n");
         }
     }
@@ -159,26 +177,34 @@ int nameExchange(char *client_name, char *server_name,int socket_desc){
    return 0;
 }
 
-int moveExchange(char *client_move, char *server_move, int client_sock) {
-    printf("GIVE ME YOUR MOVE: ");
-    char client_input[2]; // Assuming the user will input a single character followed by a newline character
-    fgets(client_input, sizeof(client_input), stdin);
+// int moveExchange(char *client_move, char *server_move, int socket_desc) {
+//     printf("GIVE ME YOUR MOVE: ");
+//     char client_input[2]; 
+//     fgets(client_input, sizeof(client_input), stdin);
 
-    // Extract the first character from user input
-    *client_move = client_input[0];
+//     // Extract the first character from user input
+//     *client_move = client_input[0]; // Copy the character to client_move
 
-    if (send(client_sock, client_move, sizeof(char), 0) < 0) {
-        printf("Unable to send message\n");
-        return -1;
-    }
+//     // Clear the input buffer (consume remaining characters, including newline)
+//     int c;
+//     while ((c = getchar()) != '\n' && c != EOF);
 
-    if (recv(client_sock, server_move, sizeof(char), 0) < 0) {
-        printf("Error while receiving server's move\n");
-        return -1;
-    }
+//     // printf("client move sent: %c\n", *client_move); // Use %c to print a single character
 
-    return 0;
-}
+//     printf("length of sent move: %lu\n",strlen(client_move));
+//     if (send(socket_desc, client_move, 1, 0) < 0) { 
+//         printf("Unable to send message\n");
+//         return -1;
+//     }
+
+//     if (recv(socket_desc, server_move, 1, 0) < 0) { // Receive data into server_move
+//         printf("Error while receiving server's move\n");
+//         return -1;
+//     }
+
+//     return 0;
+// }
+
 
 
 

@@ -74,12 +74,28 @@ int main(int argc, char *argv[]) {
 
     printf("client's name is: %s\n", client_name);
 
-    char client_move, server_move;
+    char client_move[2];
+    char server_move[2];
 
-    //zeroOut(client_move,10);
-    //zeroOut(server_move,10);
+    zeroOut(client_move,2);
+    zeroOut(server_move,2);
 
-    moveExchange(&client_move,&server_move,socket_desc);
+    server_move[0] = 'p';
+
+    if(send(client_sock, &server_move, 1, 0) < 0){
+        printf("Unable to send message\n");
+        return -1;
+    }
+
+    if(recv(client_sock, &client_move, 1, 0) < 0){
+        printf("Error while receiving client's msg\n");
+        return -1;
+    }
+
+    // moveExchange(client_move,server_move,socket_desc);
+
+    printf("server move sent: %c\n", server_move[0]); // Use %c to print a single character
+    printf("client move received: %c\n", client_move[0]);
 
     struct timespec remaining, request = { 1, 0 }; 
     
@@ -98,40 +114,40 @@ int main(int argc, char *argv[]) {
     }
 
     //printf("client move: %s\nServer move: %s\n",client_move,server_move);
-    printf("%s's move is: %c\n",client_name,client_move);
+    printf("%s's move is: %c\n",client_name,client_move[0]);
     //
     //WINNING POSSIBILITIES
     //
-    if (client_move == 'r') { // If client chose 'r'
-        if (server_move == 'r') { // If the server (you) chose 'r'
+    if (client_move[0] == 'r') { // If client chose 'r'
+        if (server_move[0] == 'r') { // If the server (you) chose 'r'
             printf("you tied bozo\n");
         }
-        else if (server_move == 's') { // If the server (you) chose 's'
+        else if (server_move[0] == 's') { // If the server (you) chose 's'
             printf("hey guy, you lost\n");
         }
-        else if (server_move == 'p') { // If the server (you) chose 'p'
+        else if (server_move[0] == 'p') { // If the server (you) chose 'p'
             printf("you win\n");
         }
     }
-    else if (client_move == 'p') { // If client chose 'p'
-        if (server_move == 'p') { // If the server (you) chose 'p'
+    else if (client_move[0] == 'p') { // If client chose 'p'
+        if (server_move[0] == 'p') { // If the server (you) chose 'p'
             printf("you tied bozo\n");
         }
-        else if (server_move == 'r') { // If the server (you) chose 'r'
+        else if (server_move[0] == 'r') { // If the server (you) chose 'r'
             printf("hey guy, you lost\n");
         }
-        else if (server_move == 's') { // If the server (you) chose 's'
+        else if (server_move[0] == 's') { // If the server (you) chose 's'
             printf("you win\n");
         }
     }
-    else if (client_move == 's') { // If client chose 's'
-        if (server_move == 's') { // If the server (you) chose 's'
+    else if (client_move[0] == 's') { // If client chose 's'
+        if (server_move[0] == 's') { // If the server (you) chose 's'
             printf("you tied bozo\n");
         }
-        else if (server_move == 'p') { // If the server (you) chose 'p'
+        else if (server_move[0] == 'p') { // If the server (you) chose 'p'
             printf("hey guy, you lost\n");
         }
-        else if (server_move == 'r') { // If the server (you) chose 'r'
+        else if (server_move[0] == 'r') { // If the server (you) chose 'r'
             printf("you win\n");
         }
     }
@@ -176,26 +192,33 @@ int nameExchange(char *client_name, char *server_name,int client_sock){
    return 0;
 }
 
-int moveExchange(char *client_move, char *server_move, int client_sock) {
-    printf("GIVE ME YOUR MOVE: ");
-    char server_input[2]; // Assuming the user will input a single character followed by a newline character
-    fgets(server_input, sizeof(server_input), stdin);
+// int moveExchange(char *client_move, char *server_move, int client_sock) {
+//     printf("GIVE ME YOUR MOVE: ");
+//     char server_input[2];
+//     fgets(server_input, sizeof(server_input), stdin);
 
-    // Extract the first character from user input
-    *server_move = server_input[0];
+//     // Extract the first character from user input
+//     *server_move = server_input[0]; // Copy the character to server_move
 
-    if (send(client_sock, server_move, sizeof(char), 0) < 0) {
-        printf("Unable to send message\n");
-        return -1;
-    }
+//     // Clear the input buffer (consume remaining characters, including newline)
+//     int c;
+//     while ((c = getchar()) != '\n' && c != EOF);
 
-    if (recv(client_sock, client_move, sizeof(char), 0) < 0) {
-        printf("Error while receiving client's move\n");
-        return -1;
-    }
+//     // printf("server move sent: %c\n", *server_move); // Use %c to print a single character
 
-    return 0;
-}
+//     printf("length of sent move: %lu\n",strlen(client_move));
+//     if (send(client_sock, server_move, 1, 0) < 0) { // Send the character, not the pointer
+//         printf("Unable to send message\n");
+//         return -1;
+//     }
+
+//     if (recv(client_sock, client_move, 1, 0) < 0) { // Receive data into client_move
+//         printf("Error while receiving server's move\n");
+//         return -1;
+//     }
+
+//     return 0;
+// }
 
 
 // bool moveCheck(char *server_move){
