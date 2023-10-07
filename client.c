@@ -61,25 +61,35 @@ int main(int argc, char *argv[]) {
     char server_move[2];
     char client_move[2];
 
-    zeroOut(client_move,2);
-    zeroOut(server_move,2);
+    zeroOut(client_move, 2);
+    zeroOut(server_move, 2);
 
-    client_move[0] = 'r';
+    printf("Enter your move (r for rock, p for paper, s for scissors): ");
+    fgets(client_move, sizeof(client_move), stdin);
 
-    // moveExchange(client_move,server_move,socket_desc);
+    // Remove the trailing newline character if present
+    size_t len = strlen(client_move);
+    if (len > 0 && client_move[len - 1] == '\n') {
+        client_move[len - 1] = '\0';
+    }
 
-    if (send(socket_desc, &client_move, 1, 0) < 0) { 
+    if (strlen(client_move) != 1 || (client_move[0] != 'r' && client_move[0] != 'p' && client_move[0] != 's')) {
+        printf("Invalid move. Please enter r, p, or s.\n");
+        return -1;
+    }
+
+    if (send(socket_desc, &client_move, 2, 0) < 0) {
         printf("Unable to send message\n");
         return -1;
     }
 
-    if (recv(socket_desc, &server_move, 1, 0) < 0) { // Receive data into server_move
+    if (recv(socket_desc, &server_move, 2, 0) < 0) {
         printf("Error while receiving server's move\n");
         return -1;
-    } 
+    }
 
-    printf("client move sent: %c\n", client_move[0]); // Use %c to print a single character
-    printf("server move received: %c\n",server_move[0]);
+    printf("Client move sent: %c\n", client_move[0]);
+    printf("Server move received: %c\n", server_move[0]);
 
     //printf("client move: %s\nServer move: %s\n",client_move,server_move);
 

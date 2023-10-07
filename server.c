@@ -82,12 +82,12 @@ int main(int argc, char *argv[]) {
 
     server_move[0] = 'p';
 
-    if(send(client_sock, &server_move, 1, 0) < 0){
+    if(send(client_sock, &server_move, 2, 0) < 0){
         printf("Unable to send message\n");
         return -1;
     }
 
-    if(recv(client_sock, &client_move, 1, 0) < 0){
+    if(recv(client_sock, &client_move, 2, 0) < 0){
         printf("Error while receiving client's msg\n");
         return -1;
     }
