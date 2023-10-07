@@ -80,7 +80,21 @@ int main(int argc, char *argv[]) {
     zeroOut(client_move,2);
     zeroOut(server_move,2);
 
-    server_move[0] = 'p';
+    printf("Enter your move (r for rock, p for paper, s for scissors): ");
+    fgets(server_move, sizeof(server_move), stdin);
+
+    // Remove the trailing newline character if present
+    size_t len = strlen(server_move);
+    if (len > 0 && server_move[len - 1] == '\n') {
+        server_move[len - 1] = '\0';
+    }
+
+    if (strlen(server_move) != 1 || (server_move[0] != 'r' && server_move[0] != 'p' && server_move[0] != 's')) {
+        printf("Invalid move. Please enter r, p, or s.\n");
+        return -1;
+    }
+
+    //server_move[0] = 'p';
 
     if(send(client_sock, &server_move, 2, 0) < 0){
         printf("Unable to send message\n");
@@ -94,8 +108,8 @@ int main(int argc, char *argv[]) {
 
     // moveExchange(client_move,server_move,socket_desc);
 
-    printf("server move sent: %c\n", server_move[0]); // Use %c to print a single character
-    printf("client move received: %c\n", client_move[0]);
+    // printf("server move sent: %c\n", server_move[0]); 
+    // printf("client move received: %c\n", client_move[0]);
 
     struct timespec remaining, request = { 1, 0 }; 
     
@@ -109,7 +123,7 @@ int main(int argc, char *argv[]) {
         }
         
         // Update the request time for the next iteration
-        request.tv_sec = 1; // Set the countdown to 1 second
+        request.tv_sec = 1; // Set countdown to 1 second
         request.tv_nsec = 0;
     }
 
@@ -120,35 +134,35 @@ int main(int argc, char *argv[]) {
     //
     if (client_move[0] == 'r') { // If client chose 'r'
         if (server_move[0] == 'r') { // If the server (you) chose 'r'
-            printf("you tied bozo\n");
+            printf("YOU TIED :(\n");
         }
         else if (server_move[0] == 's') { // If the server (you) chose 's'
-            printf("hey guy, you lost\n");
+            printf("YOU LOSE :(\n");
         }
         else if (server_move[0] == 'p') { // If the server (you) chose 'p'
-            printf("you win\n");
+            printf("YOU WIN!\n");
         }
     }
     else if (client_move[0] == 'p') { // If client chose 'p'
         if (server_move[0] == 'p') { // If the server (you) chose 'p'
-            printf("you tied bozo\n");
+            printf("YOU TIED :(\n");
         }
         else if (server_move[0] == 'r') { // If the server (you) chose 'r'
-            printf("hey guy, you lost\n");
+            printf("YOU LOSE :(\n");
         }
         else if (server_move[0] == 's') { // If the server (you) chose 's'
-            printf("you win\n");
+            printf("YOU WIN!\n");
         }
     }
     else if (client_move[0] == 's') { // If client chose 's'
         if (server_move[0] == 's') { // If the server (you) chose 's'
-            printf("you tied bozo\n");
+            printf("YOU TIED :(\n");
         }
         else if (server_move[0] == 'p') { // If the server (you) chose 'p'
-            printf("hey guy, you lost\n");
+            printf("YOU LOSE :(\n");
         }
         else if (server_move[0] == 'r') { // If the server (you) chose 'r'
-            printf("you win\n");
+            printf("YOU WIN!\n");
         }
     }
     else {

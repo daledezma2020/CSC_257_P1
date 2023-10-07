@@ -88,8 +88,8 @@ int main(int argc, char *argv[]) {
         return -1;
     }
 
-    printf("Client move sent: %c\n", client_move[0]);
-    printf("Server move received: %c\n", server_move[0]);
+    // printf("Client move sent: %c\n", client_move[0]);
+    // printf("Server move received: %c\n", server_move[0]);
 
     //printf("client move: %s\nServer move: %s\n",client_move,server_move);
 
@@ -116,35 +116,35 @@ int main(int argc, char *argv[]) {
     //
     if (server_move[0] == 'r') { // If server chose 'rock'
         if (client_move[0] == 'r') { // If the client (you) chose 'rock'
-            printf("you tied bozo\n");
+            printf("YOU TIED :(\n");
         }
         else if (client_move[0] == 's') { // If the client (you) chose 'scissors'
-            printf("hey guy, you lost\n");
+            printf("YOU LOSE :(\n");
         }
         else if (client_move[0] == 'p') { // If the client (you) chose 'paper'
-            printf("you win\n");
+            printf("YOU WIN!\n");
         }
     }
     else if (server_move[0] == 'p') { // If server chose 'paper'
         if (client_move[0] == 'p') { // If the client (you) chose 'paper'
-            printf("you tied bozo\n");
+            printf("YOU TIED :(\n");
         }
         else if (client_move[0] == 'r') { // If the client (you) chose 'rock'
-            printf("hey guy, you lost\n");
+            printf("YOU LOSE :(\n");
         }
         else if (client_move[0] == 's') { // If the client (you) chose 'scissors'
-            printf("you win\n");
+            printf("YOU WIN!\n");
         }
     }
     else if (server_move[0] == 's') { // If server chose 'scissors'
         if (client_move[0] == 's') { // If the client (you) chose 'scissors'
-            printf("you tied bozo\n");
+            printf("YOU TIED :(\n");
         }
         else if (client_move[0] == 'p') { // If the client (you) chose 'paper'
-            printf("hey guy, you lost\n");
+            printf("YOU LOSE :(\n");
         }
         else if (client_move[0] == 'r') { // If the client (you) chose 'rock'
-            printf("you win\n");
+            printf("YOU WIN!\n");
         }
     }
     else {
