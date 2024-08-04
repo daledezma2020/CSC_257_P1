@@ -34,7 +34,7 @@ int main(int argc, char *argv[]) {
         printf("Error while creating socket\n");
         return -1;
     }
-    printf("Socket created successfully\n");
+    //printf("Socket created successfully\n");
     
     // Set port and IP:
     server_addr.sin_family = AF_INET;
@@ -46,7 +46,7 @@ int main(int argc, char *argv[]) {
         printf("Couldn't bind to the port\n");
         return -1;
     }
-    printf("Done with binding\n");
+    //printf("Done with binding\n");
     
     // Listen for clients:
     if(listen(socket_desc, 1) < 0){
